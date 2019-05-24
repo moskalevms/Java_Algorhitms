@@ -46,6 +46,10 @@ cmake-build-*/
 /out/
 *.iml
 *.xml
+lesson2/
+lesson2
+*lesson2
+
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
