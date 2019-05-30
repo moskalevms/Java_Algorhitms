@@ -49,6 +49,7 @@ cmake-build-*/
 lesson2/
 lesson2
 *lesson2
+/lesson3/
 
 
 # mpeltonen/sbt-idea plugin
@@ -73,4 +74,5 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 /src/
 /.idea/
+/lesson3/
 
