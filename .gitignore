@@ -51,6 +51,10 @@ lesson2
 *lesson2
 
 
+lesson3/
+
+
+
 # mpeltonen/sbt-idea plugin
 .idea_modules/
 
@@ -73,4 +77,6 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 /src/
 /.idea/
-
+/lesson3/
+/lesson5/
+/lesson6/
