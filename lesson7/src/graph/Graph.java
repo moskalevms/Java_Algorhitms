@@ -6,8 +6,6 @@ public class Graph {
 
     private final List<Vertex> vertexList = new ArrayList<>();
     private boolean[][] adjMat;
-    List<Vertex> visitedVertexList = new ArrayList<>();
-
 
     private int size;
 
@@ -74,50 +72,58 @@ public class Graph {
             System.out.println();
         }
     }
-
-    public void displayTrack() {
-        for (int i = 0; i < size; i++) {
-            System.out.print(visitedVertexList.get(i));
-            System.out.println("-->");
-        }
-            System.out.println();
-        }
-
     /**
      * англ. breadth-first search, BFS
      * @param startLabel
      */
-    public void bfs(String startLabel, String finishLabel) {
+    public void bfs(String startLabel) {
         int startIndex = indexOf(startLabel);
-        int finishIndex = indexOf(finishLabel);
-        if (startIndex == -1 ) {
-            throw new IllegalArgumentException("Invalid startLabel: " + startLabel );
-        }
-        if (finishIndex == 1 ) {
-            throw new IllegalArgumentException("Invalid finishLabel: " + finishLabel);
+        if (startIndex == -1) {
+            throw new IllegalArgumentException("Invalid startLabel: " + startLabel);
         }
 
         Queue<Vertex> queue = new LinkedList<>();
 
-
         Vertex vertex = vertexList.get(startIndex);
         visitVertex(vertex, queue);
 
-        Vertex finishVertex = vertexList.get(finishIndex);
-
-        //Нужно все посещенные вершины записывать в массив
-        //(те, которые удаляются из очереди после посещения)
-        //не совсем ясно, как вывести путь
-        while ( !queue.isEmpty()  ) {
+        while ( !queue.isEmpty() ) {
             vertex = getNearUnvisitedVertex(queue.peek());
-            if (vertex != null ) {
+            if (vertex != null) {
                 visitVertex(vertex, queue);
-                if(vertex.getLabel().equals(finishLabel))
-                    break;
-            } else {
+            }
+            else {
                 queue.remove();
             }
+        }
 
+        resetVertexState();
+
+    }
+
+    /**
+     * англ. Depth-first search, DFS
+     * @param startLabel
+     */
+    public void dfs(String startLabel) {
+        int startIndex = indexOf(startLabel);
+        if (startIndex == -1) {
+            throw new IllegalArgumentException("Invalid startLabel: " + startLabel);
+        }
+
+        Stack<Vertex> stack = new Stack<>();
+
+        Vertex vertex = vertexList.get(startIndex);
+        visitVertex(vertex, stack);
+
+        while ( !stack.isEmpty() ) {
+            vertex = getNearUnvisitedVertex(stack.peek());
+            if (vertex != null) {
+                visitVertex(vertex, stack);
+            }
+            else {
+                stack.pop();
+            }
         }
 
         resetVertexState();
@@ -142,7 +148,13 @@ public class Graph {
         return null;
     }
 
-      private void visitVertex(Vertex vertex, Queue<Vertex> queue) {
+    private void visitVertex(Vertex vertex, Stack<Vertex> stack) {
+        displayVertex(vertex);
+        stack.push(vertex);
+        vertex.setVisited();
+    }
+
+    private void visitVertex(Vertex vertex, Queue<Vertex> queue) {
         displayVertex(vertex);
         queue.add(vertex);
         vertex.setVisited();
@@ -150,6 +162,50 @@ public class Graph {
 
     private void displayVertex(Vertex vertex) {
         System.out.println(vertex);
+    }
+
+    public Stack<String> findShortPathViaBfs(String startLabel, String finishLabel) {
+        int startIndex  = indexOf(startLabel);
+        int finishIndex = indexOf(finishLabel);
+        if (startIndex == -1) {
+            throw new IllegalArgumentException("Invalid startLabel: " + startLabel);
+        }
+        if (finishIndex == -1) {
+            throw new IllegalArgumentException("Invalid finishLabel: " + finishLabel);
+        }
+
+        Queue<Vertex> queue = new ArrayDeque<>();
+
+        Vertex vertex = vertexList.get(startIndex);
+        visitVertex(vertex, queue);
+
+        while ( !queue.isEmpty()) {
+            vertex = getNearUnvisitedVertex(queue.peek());
+            if (vertex == null) {
+                queue.remove();
+            }
+            else {
+                visitVertex(vertex, queue);
+                vertex.setPreviousVertex(queue.peek());
+                if (vertex.getLabel().equals(finishLabel)) {
+                    return buildPath(vertex);
+                }
+            }
+        }
+
+        resetVertexState();
+        return null;
+    }
+
+    private Stack<String> buildPath(Vertex vertex) {
+        Stack<String> stack = new Stack<>();
+        Vertex current = vertex;
+        while (current != null) {
+            stack.push(current.getLabel());
+            current = current.getPreviousVertex();
+        }
+
+        return stack;
     }
 
 }

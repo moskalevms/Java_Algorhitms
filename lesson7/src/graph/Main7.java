@@ -1,40 +1,54 @@
 package graph;
 
+import java.util.Stack;
+
 public class Main7 {
 
     public static void main(String[] args) {
-        testBfs();
-    }
-
-    private static void testBfs() {
-        //Из Москвы в Воронеж
-        //Должно получиться Мск-Тула-Липецк-Воронеж
         Graph graph = new Graph(10);
         graph.addVertex("Москва");
         graph.addVertex("Тула");
-        graph.addVertex("Липецк");
-        graph.addVertex("Воронеж");
         graph.addVertex("Рязань");
-        graph.addVertex("Тамбов");
-        graph.addVertex("Саратов");
         graph.addVertex("Калуга");
+        graph.addVertex("Тамбов");
+        graph.addVertex("Липецк");
         graph.addVertex("Орел");
+        graph.addVertex("Саратов");
         graph.addVertex("Курск");
+        graph.addVertex("Воронеж");
 
-        graph.addEdges("Москва", "Тула", "Рязань", "Калуга");
-        graph.addEdges("Тула", "Липецк", "Москва");
-        graph.addEdges("Липецк", "Тула", "Воронеж");
-        graph.addEdges("Рязань", "Тамбов", "Москва");
-        graph.addEdges("Тамбов", "Рязань", "Саратов");
-        graph.addEdges("Саратов", "Тамбов", "Воронеж");
-        graph.addEdges("Калуга", "Орел", "Москва");
-        graph.addEdges("Орел", "Калуга", "Курск");
-        graph.addEdges("Курск", "Орел", "Воронеж");
-        graph.addEdges("Воронеж", "Липецк", "Саратов", "Курск");
+        graph.addEdge("Москва","Тула");
+        graph.addEdge("Москва","Калуга");
+        graph.addEdge("Москва","Рязань");
+        graph.addEdge("Тула","Липецк");
+        graph.addEdge("Рязань","Тамбов");
+        graph.addEdge("Калуга","Орел");
+        graph.addEdge("Липецк","Воронеж");
+        graph.addEdge("Тамбов","Саратов");
+        graph.addEdge("Орел","Курск");
+        graph.addEdge("Саратов","Воронеж");
+        graph.addEdge("Курск","Воронеж");
 
-        graph.bfs("Москва", "Воронеж");
+//        Stack<String> path = graph.findShortPathViaBfs("Москва", "Воронеж");
+        Stack<String> path = graph.findShortPathViaBfs("Москва", "Саратов");
+//        Stack<String> path = graph.findShortPathViaBfs("Рязань", "Курск");
+        System.out.println("\n The shortest path:");
+        showShortPath(path);
+    }
 
-        graph.display();
+    private static void showShortPath(Stack<String> path) {
+        StringBuilder sb = new StringBuilder();
+        boolean isFirst = true;
+
+        while ( !path.isEmpty() ) {
+            if (!isFirst) {
+                sb.append(" -> ");
+            }
+            isFirst = false;
+            sb.append(path.pop());
+        }
+
+        System.out.println(sb);
     }
 
 }
